@@ -1,0 +1,25 @@
+aws:
+  region: af-south-1
+  bucket: cct-ds-code-challenge-input-data
+  credentials_url: https://cct-ds-code-challenge-input-data.s3.af-south-1.amazonaws.com/ds_code_challenge_creds.json
+objects:
+  mixed_hex_geojson: city-hex-polygons-8-10.geojson
+  reference_hex_geojson: city-hex-polygons-8.geojson
+  service_requests: sr.csv.gz
+  service_requests_reference: sr_hex.csv.gz
+processing:
+  sample_features: 100
+  csv_chunk_size: 100000
+  h3_resolution: 8
+  # Missing/invalid coordinates are separately counted and are not join failures.
+  # A join failure is a valid coordinate whose H3 cell is not in the City level-8 set.
+  # 1% is intentionally strict enough to catch systematic coordinate/CRS mistakes while
+  # allowing a small number of genuine source anomalies. Confirm this against the real
+  # observed baseline before final submission.
+  max_join_failure_rate: 0.01
+  # Real-data validation found 3 reference mismatches out of 941,634 rows
+  # (0.000319%). In each case, H3 computed the same cell as sr_hex.csv.gz,
+  # but that cell was absent from the supplied City resolution-8 polygon set.
+  # A 0.001% tolerance therefore catches material divergence while allowing
+  # these verified source-reference anomalies.
+  max_reference_mismatch_rate: 0.00001

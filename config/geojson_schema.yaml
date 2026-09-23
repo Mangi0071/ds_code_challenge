@@ -1,0 +1,20 @@
+# Desired schema for Section 1 conformance scoring.
+# The score is the percentage of individual checks that pass across the
+# collection and all returned features. A score below 99% fails the pipeline.
+conformance_threshold_percent: 99.0
+expected:
+  collection_type: FeatureCollection
+  feature_type: Feature
+  geometry_type: Polygon
+  h3_resolution: 8
+  # The source field names are discovered from an S3 Select sample at runtime
+  # so the pipeline does not silently assume an undocumented source schema.
+  h3_property: auto
+  resolution_property: auto
+checks:
+  - collection has the expected GeoJSON collection type
+  - every item has the expected GeoJSON feature type
+  - every feature has a properties object
+  - every geometry is a Polygon
+  - every geometry has non-empty coordinates
+  - every H3 value is a valid cell at the expected resolution
